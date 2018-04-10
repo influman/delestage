@@ -1,0 +1,152 @@
+{
+	"plugin_id": "delestage",
+	"name_fr": "Délestage électrique",
+	"icon": "delestage.png",
+	"version": "0.1beta",
+	"creation_date": "2019-04-07",
+	"modification_date": "2018-04-07",
+	"author": "Influman",
+	"description_fr": "Gestion du délestage électrique",
+	"description_en": "",
+	"description_es": "",
+	"description_it": "",
+	"description_de": "",
+	"forum_link": "https://forum.eedomus.com/viewtopic.php?f=50&t=6938",
+	"parameters":
+    [
+		{
+			"parameter": "line1",
+			"description": "Votre compteur",
+			"xtype": "displayfield",
+			"field": "style: 'padding: 3px;', value: '......................................'"
+		},
+		{
+			"parameter": "PUISSANCE", 
+			"description": "Seuil déclenchement en W (5500, 8250...)",
+			"xtype": "textfield",
+			"default_value": "8250",
+			"field": "width:100, allowBlank:false"
+		},
+		{
+    		"parameter": "APII", 
+			"description": "Périphérique Consommation Instantanée (en Wh)",
+    		"xtype": "combo",
+			"field": "store : getCombo('/json/list_all.php?value_type=float&filter_unit=Wh,W'), displayField: 'label', valueField: 'id', typeAhead: true, forceSelection: true, triggerAction: 'all', selectOnFocus: true, editable: false, shadow:true, mode: 'local', width: 250, listWidth: 300, allowBlank: true"
+		},
+		{
+			"parameter": "line2",
+			"description": "Vos appareils non prioritaires",
+			"xtype": "displayfield",
+			"field": "style: 'padding: 3px;', value: '......................................'"
+		},
+		{
+    		"parameter": "APP1", 
+			"description": "#1",
+    		"xtype": "combo",
+			"field": "store : getCombo('/json/list_all.php'), displayField: 'label', valueField: 'id', typeAhead: true, forceSelection: true, triggerAction: 'all', selectOnFocus: true, editable: false, shadow:true, mode: 'local', width: 250, listWidth: 300, allowBlank: true"
+		},
+		{
+			"parameter": "APPSTOP1", 
+			"description": "Valeur d'arrêt #1",
+			"xtype": "textfield",
+			"default_value": "0",
+			"field": "width:50, allowBlank:false"
+		},
+		{
+    		"parameter": "APP2", 
+			"description": "#2",
+    		"xtype": "combo",
+			"field": "store : getCombo('/json/list_all.php'), displayField: 'label', valueField: 'id', typeAhead: true, forceSelection: true, triggerAction: 'all', selectOnFocus: true, editable: false, shadow:true, mode: 'local', width: 250, listWidth: 300, allowBlank: true"
+		},
+		{
+			"parameter": "APPSTOP2", 
+			"description": "Valeur d'arrêt #2",
+			"xtype": "textfield",
+			"default_value": "0",
+			"field": "width:50, allowBlank:false"
+		},
+		{
+    		"parameter": "APP3", 
+			"description": "#3",
+    		"xtype": "combo",
+			"field": "store : getCombo('/json/list_all.php'), displayField: 'label', valueField: 'id', typeAhead: true, forceSelection: true, triggerAction: 'all', selectOnFocus: true, editable: false, shadow:true, mode: 'local', width: 250, listWidth: 300, allowBlank: true"
+		},
+		{
+			"parameter": "APPSTOP3", 
+			"description": "Valeur d'arrêt #3",
+			"xtype": "textfield",
+			"default_value": "0",
+			"field": "width:50, allowBlank:false"
+		}
+	],
+	"scripts":
+	[
+		{
+			"name": "delestage.php"
+		}
+	],
+	"devices":
+    [
+		{
+			"device_id": "delestage",
+			"module_id": "51",
+			"type": "http",
+			"name_fr": "Délestage - Statut",
+			"icon": "delestage_statut.png",
+			"utilisation_id": "35",
+			"parameters":
+			{
+				"VAR1": "plugin.parameters.PUISSANCE",
+				"VAR2": "plugin.parameters.APII",
+      			"VAR3": "plugin.parameters.APP1(plugin.parameters.APPSTOP1),plugin.parameters.APP2(plugin.parameters.APPSTOP2),plugin.parameters.APP3(plugin.parameters.APPSTOP3)",
+				"value_type": "string",
+				"ignore_errors": 3,
+				"RAW_URL": "http://localhost/script/?exec=delestage.php&power=[VAR1]&apii=[VAR2]&periph=[VAR3]&action=status",
+				"RAW_XPATH": "/DELESTAGE/STATUT",
+				"POLLING": "5"
+			}
+		},
+		{
+			"device_id": "mode",
+			"parent_id": "delestage",
+			"module_id": "41",
+			"type": "http",
+			"name_fr": "Délestage - Mode",
+			"icon": "delestage_mode.png",
+			"utilisation_id": "43",
+			"parameters":
+			{
+				"VAR1": "plugin.parameters.PUISSANCE",
+				"VAR2": "plugin.parameters.APII",
+      			"VAR3": "plugin.parameters.APP1(plugin.parameters.APPSTOP1),plugin.parameters.APP2(plugin.parameters.APPSTOP2),plugin.parameters.APP3(plugin.parameters.APPSTOP3)",
+				"value_type": "list",
+				"ignore_errors": 3,
+				"RAW_URL": "",
+				"RAW_XPATH": "",
+				"POLLING": "5"
+			},
+			"values":
+			[
+				{ "value": "0", "description": "Arrêt", "icon": "delestage_stop.png", "http_url": "http://localhost/script/?exec=delestage.php", "http_type": "GET",  "http_params": "&power=[VAR1]&apii=[VAR2]&periph=[VAR3]&action=set&value=[RAW_VALUE]" },
+				{ "value": "1", "description": "Cascade", "icon": "delestage_cascade.png", "http_url": "http://localhost/script/?exec=delestage.php", "http_type": "GET",  "http_params": "&power=[VAR1]&apii=[VAR2]&periph=[VAR3]&action=set&value=[RAW_VALUE]" },
+				{ "value": "2", "description": "Cascado-cyclique", "icon": "delestage_cyclique.png", "http_url": "http://localhost/script/?exec=delestage.php", "http_type": "GET",  "http_params": "&power=[VAR1]&apii=[VAR2]&periph=[VAR3]&action=set&value=[RAW_VALUE]" },
+				{ "value": "99", "description": "MaJ appareils", "icon": "delestage_maj.png", "http_url": "http://localhost/script/?exec=delestage.php", "http_type": "GET",  "http_params": "&power=[VAR1]&apii=[VAR2]&periph=[VAR3]&action=set&value=[RAW_VALUE]" },
+				{ "value": "999", "description": "Délestage en cours...", "hidden":"1", "icon": "delestage_go.png", "http_url": "http://localhost/script/?exec=delestage.php", "http_type": "GET",  "http_params": "&power=[VAR1]&apii=[VAR2]&periph=[VAR3]&action=set&value=[RAW_VALUE]" }
+			]
+		}
+    ],
+	"rules": [
+      {
+        "name_fr": "Délestage Seuil de déclenchement",
+        "criterias":
+        [
+          { "device_id": "plugin.parameters.APII", "type": "d", "criteria": ">", "target": "plugin.parameters.PUISSANCE"  },
+		  { "device_id": "plugin.devices.mode", "type": "e", "criteria": "!=", "target": "0"  }
+		],
+        "actions":
+        [
+          { "device_id": "plugin.devices.mode", "type": "direct", "action": "999"}
+        ]
+      }
+	]
+}
