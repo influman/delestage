@@ -19,7 +19,7 @@ Cliquez sur "Configuration" / "Ajouter ou supprimer un périphérique" / "Store ee
 *Voici les différents champs à renseigner:*
 
 * [Obligatoire] - Le seuil de déclenchement  
-* [Obligatoire] - Le périphérique compteur fournissant la puissance globale instantanée consommée  
+* [Obligatoire] - Le périphérique compteur fournissant la puissance globale instantanée consommée (en W, Va..)  
 * [Obligatoire] - Les 3 périphériques non prioritaires (chauffages...) à délester  
 * [Obligatoire] - Les 3 valeurs associées aux périphériques permettant de les couper  
   

@@ -2,9 +2,9 @@
 	"plugin_id": "delestage",
 	"name_fr": "Délestage électrique",
 	"icon": "delestage.png",
-	"version": "0.1beta",
+	"version": "0.2beta",
 	"creation_date": "2019-04-07",
-	"modification_date": "2018-04-07",
+	"modification_date": "2018-04-12",
 	"author": "Influman",
 	"description_fr": "Gestion du délestage électrique",
 	"description_en": "",
@@ -31,7 +31,7 @@
     		"parameter": "APII", 
 			"description": "Périphérique Consommation Instantanée (en Wh)",
     		"xtype": "combo",
-			"field": "store : getCombo('/json/list_all.php?value_type=float&filter_unit=Wh,W'), displayField: 'label', valueField: 'id', typeAhead: true, forceSelection: true, triggerAction: 'all', selectOnFocus: true, editable: false, shadow:true, mode: 'local', width: 250, listWidth: 300, allowBlank: true"
+			"field": "store : getCombo('/json/list_all.php?value_type=float&filter_unit=Wh,W,VA,Va'), displayField: 'label', valueField: 'id', typeAhead: true, forceSelection: true, triggerAction: 'all', selectOnFocus: true, editable: false, shadow:true, mode: 'local', width: 250, listWidth: 300, allowBlank: true"
 		},
 		{
 			"parameter": "line2",

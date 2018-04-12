@@ -1,7 +1,9 @@
 <?php  
     $xml = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>";  
 	//**********************************************************************************************************
-    // V0.1 : Script de gestion de délestage électrique
+    // V0.2 : Script de gestion de délestage électrique
+	// https://github.com/influman/delestage
+	//
 	//http://localhost/script/?exec=delestage.php&power=[VAR1]&apii=[VAR2]&periph=[VAR3]&action=status|set&value=0|1|2|99|999
     //*************************************** ******************************************************************
     // recuperation des infos depuis la requete
