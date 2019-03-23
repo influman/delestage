@@ -2,9 +2,9 @@
 	"plugin_id": "delestage",
 	"name_fr": "Délestage électrique",
 	"icon": "delestage.png",
-	"version": "0.2beta",
+	"version": "1.0",
 	"creation_date": "2019-04-07",
-	"modification_date": "2018-04-12",
+	"modification_date": "2018-08-29",
 	"author": "Influman",
 	"description_fr": "Gestion du délestage électrique",
 	"description_en": "",
@@ -29,9 +29,9 @@
 		},
 		{
     		"parameter": "APII", 
-			"description": "Périphérique Consommation Instantanée (en Wh)",
+			"description": "Périphérique Consommation Instantanée (en W ou Va)",
     		"xtype": "combo",
-			"field": "store : getCombo('/json/list_all.php?value_type=float&filter_unit=Wh,W,VA,Va'), displayField: 'label', valueField: 'id', typeAhead: true, forceSelection: true, triggerAction: 'all', selectOnFocus: true, editable: false, shadow:true, mode: 'local', width: 250, listWidth: 300, allowBlank: true"
+			"field": "store : getCombo('/json/list_all.php'), displayField: 'label', valueField: 'id', typeAhead: true, forceSelection: true, triggerAction: 'all', selectOnFocus: true, editable: false, shadow:true, mode: 'local', width: 250, listWidth: 300, allowBlank: true"
 		},
 		{
 			"parameter": "line2",
@@ -53,6 +53,13 @@
 			"field": "width:50, allowBlank:false"
 		},
 		{
+			"parameter": "APPNAME1", 
+			"description": "Nom court #1",
+			"xtype": "textfield",
+			"default_value": "Room 1",
+			"field": "width:200, allowBlank:false"
+		},
+		{
     		"parameter": "APP2", 
 			"description": "#2",
     		"xtype": "combo",
@@ -66,6 +73,13 @@
 			"field": "width:50, allowBlank:false"
 		},
 		{
+			"parameter": "APPNAME2", 
+			"description": "Nom court #2",
+			"xtype": "textfield",
+			"default_value": "Room 2",
+			"field": "width:200, allowBlank:false"
+		},
+		{
     		"parameter": "APP3", 
 			"description": "#3",
     		"xtype": "combo",
@@ -77,6 +91,13 @@
 			"xtype": "textfield",
 			"default_value": "0",
 			"field": "width:50, allowBlank:false"
+		},
+		{
+			"parameter": "APPNAME3", 
+			"description": "Nom court #3",
+			"xtype": "textfield",
+			"default_value": "Room 3",
+			"field": "width:200, allowBlank:false"
 		}
 	],
 	"scripts":
@@ -96,13 +117,13 @@
 			"utilisation_id": "35",
 			"parameters":
 			{
-				"VAR1": "plugin.parameters.PUISSANCE",
-				"VAR2": "plugin.parameters.APII",
-      			"VAR3": "plugin.parameters.APP1(plugin.parameters.APPSTOP1),plugin.parameters.APP2(plugin.parameters.APPSTOP2),plugin.parameters.APP3(plugin.parameters.APPSTOP3)",
+				"VAR1": "plugin.parameters.PUISSANCE,plugin.parameters.APII",
+				"VAR2": "plugin.parameters.APPNAME1,plugin.parameters.APPNAME2,plugin.parameters.APPNAME3",
+      			"VAR3": "plugin.parameters.APP1-plugin.parameters.APPSTOP1,plugin.parameters.APP2-plugin.parameters.APPSTOP2,plugin.parameters.APP3-plugin.parameters.APPSTOP3",
 				"value_type": "string",
 				"ignore_errors": 3,
-				"RAW_URL": "http://localhost/script/?exec=delestage.php&power=[VAR1]&apii=[VAR2]&periph=[VAR3]&action=status",
-				"RAW_XPATH": "/DELESTAGE/STATUT",
+				"RAW_URL": "http://localhost/script/?exec=delestage.php&power=[VAR1]&names=[VAR2]&periph=[VAR3]&action=status",
+				"RAW_XPATH": "/DELESTAGE/STATUT change('|', '<br>')",
 				"POLLING": "5"
 			}
 		},
@@ -116,9 +137,9 @@
 			"utilisation_id": "43",
 			"parameters":
 			{
-				"VAR1": "plugin.parameters.PUISSANCE",
-				"VAR2": "plugin.parameters.APII",
-      			"VAR3": "plugin.parameters.APP1(plugin.parameters.APPSTOP1),plugin.parameters.APP2(plugin.parameters.APPSTOP2),plugin.parameters.APP3(plugin.parameters.APPSTOP3)",
+				"VAR1": "plugin.parameters.PUISSANCE,plugin.parameters.APII",
+				"VAR2": "plugin.parameters.APPNAME1,plugin.parameters.APPNAME2,plugin.parameters.APPNAME3",
+      			"VAR3": "plugin.parameters.APP1-plugin.parameters.APPSTOP1,plugin.parameters.APP2-plugin.parameters.APPSTOP2,plugin.parameters.APP3-plugin.parameters.APPSTOP3",
 				"value_type": "list",
 				"ignore_errors": 3,
 				"RAW_URL": "",
@@ -127,11 +148,11 @@
 			},
 			"values":
 			[
-				{ "value": "0", "description": "Arrêt", "icon": "delestage_stop.png", "http_url": "http://localhost/script/?exec=delestage.php", "http_type": "GET",  "http_params": "&power=[VAR1]&apii=[VAR2]&periph=[VAR3]&action=set&value=[RAW_VALUE]" },
-				{ "value": "1", "description": "Cascade", "icon": "delestage_cascade.png", "http_url": "http://localhost/script/?exec=delestage.php", "http_type": "GET",  "http_params": "&power=[VAR1]&apii=[VAR2]&periph=[VAR3]&action=set&value=[RAW_VALUE]" },
-				{ "value": "2", "description": "Cascado-cyclique", "icon": "delestage_cyclique.png", "http_url": "http://localhost/script/?exec=delestage.php", "http_type": "GET",  "http_params": "&power=[VAR1]&apii=[VAR2]&periph=[VAR3]&action=set&value=[RAW_VALUE]" },
-				{ "value": "99", "description": "MaJ appareils", "icon": "delestage_maj.png", "http_url": "http://localhost/script/?exec=delestage.php", "http_type": "GET",  "http_params": "&power=[VAR1]&apii=[VAR2]&periph=[VAR3]&action=set&value=[RAW_VALUE]" },
-				{ "value": "999", "description": "Délestage en cours...", "hidden":"1", "icon": "delestage_go.png", "http_url": "http://localhost/script/?exec=delestage.php", "http_type": "GET",  "http_params": "&power=[VAR1]&apii=[VAR2]&periph=[VAR3]&action=set&value=[RAW_VALUE]" }
+				{ "value": "0", "description": "Arrêt", "icon": "delestage_stop.png", "http_url": "http://localhost/script/?exec=delestage.php", "http_type": "GET",  "http_params": "&power=[VAR1]&names=[VAR2]&periph=[VAR3]&action=set&value=[RAW_VALUE]" },
+				{ "value": "1", "description": "Cascade", "icon": "delestage_cascade.png", "http_url": "http://localhost/script/?exec=delestage.php", "http_type": "GET",  "http_params": "&power=[VAR1]&names=[VAR2]&periph=[VAR3]&action=set&value=[RAW_VALUE]" },
+				{ "value": "2", "description": "Cascado-cyclique", "icon": "delestage_cyclique.png", "http_url": "http://localhost/script/?exec=delestage.php", "http_type": "GET",  "http_params": "&power=[VAR1]&names=[VAR2]&periph=[VAR3]&action=set&value=[RAW_VALUE]" },
+				{ "value": "99", "description": "MaJ appareils", "icon": "delestage_maj.png", "http_url": "http://localhost/script/?exec=delestage.php", "http_type": "GET",  "http_params": "&power=[VAR1]&names=[VAR2]&periph=[VAR3]&action=set&value=[RAW_VALUE]" },
+				{ "value": "999", "description": "Délestage en cours...", "hidden":"1", "icon": "delestage_go.png", "http_url": "http://localhost/script/?exec=delestage.php", "http_type": "GET",  "http_params": "&power=[VAR1]&names=[VAR2]&periph=[VAR3]&action=set&value=[RAW_VALUE]" }
 			]
 		}
     ],
