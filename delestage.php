@@ -1,7 +1,7 @@
 <?php  
     $xml = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>";  
 	//**********************************************************************************************************
-    // V1.0 : Script de gestion de délestage électrique
+    // V1.1 : Script de gestion de délestage électrique
 	//*************************************** ******************************************************************
     // recuperation des infos depuis la requete
 	// PUISSANCE, COMPTEUR - VAR1
@@ -321,7 +321,9 @@
 		if ($devices_ok) {
 			$statut = "";
 			// Affichage statut
+			$tab_delestage = array();
 			for($i = 1;$i <= count($tab_devices_api);$i++){
+				$tab_delestage[$i] = "ON";
 				if ($i>1) {
 					$statut .= " | ";
 				}
@@ -329,6 +331,10 @@
 				$device_text = "";
 				
 				if ($i == $index_current_change1 && $change1ok) { //ce périphérique vient de changer
+					$tab_delestage[$i] = $changevalue1;
+					if ($changevalue1 == $tab_devices_off[$i]){
+						$tab_delestage[$i] = "OFF";
+					}
 					$device_tab_valuelist = getPeriphValueList($tab_devices_api[$i]);
 					foreach($device_tab_valuelist As $device_tab_value) {
 						if ($device_tab_value["value"] == $changevalue1) {
@@ -338,6 +344,10 @@
 					}
 				} 
 				if ($i == $index_current_change2 && $change2ok) {
+					$tab_delestage[$i] = $changevalue2;
+					if ($changevalue2 == $tab_devices_off[$i]){
+						$tab_delestage[$i] = "OFF";
+					}
 					$device_tab_valuelist = getPeriphValueList($tab_devices_api[$i]);
 					foreach($device_tab_valuelist As $device_tab_value) {
 						if ($device_tab_value["value"] == $changevalue2) {
@@ -353,6 +363,10 @@
 					if ($device_text == "") {
 						$device_text = $device_value;
 					}
+					$tab_delestage[$i] = $device_value;
+					if ($device_value == $tab_devices_off[$i]){
+						$tab_delestage[$i] = "OFF";
+					}
 				}
 				if ($device_name != "") {
 					$statut .= $device_name.": ".$device_text;
@@ -361,8 +375,10 @@
 				}
 				if ($tab_devices_dlst[$i] == true) {
 					$statut .= " (D)";
+					$tab_delestage[$i] = "DLST";
 				}
 			}
+			saveVariable("DELESTAGE_MONITOR",$tab_delestage);
 		}
 		
 		$xml .= $statut;
